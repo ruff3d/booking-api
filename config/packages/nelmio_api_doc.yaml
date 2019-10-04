@@ -1,0 +1,10 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Room Booking API
+            description: The App intents to book a single meeting room for you;)
+            version: 1.0.0
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/v2(?!/doc$) # Accepts routes under /v2 except /api/doc
+    models: { use_jms: false }

@@ -1,0 +1,51 @@
+version: '3.4'
+
+services:
+    php:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+            target: api_php
+        image: php:booking
+        depends_on:
+            - db
+        volumes:
+            - ./:/srv:rw
+            - ./docker/php/php.ini-dev/:/usr/local/etc/php/conf.d/api-platform.ini
+        env_file:
+            - .env
+        environment:
+            - MYSQL_HOST=${MYSQL_HOST}
+            - MYSQL_PORT=${MYSQL_PORT}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - PHP_IDE_CONFIG=BookingApp
+
+    api:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+            target: api_nginx
+        image: nginx:bookig
+        depends_on:
+            - php
+        volumes:
+            - ./public:/srv/public:ro
+        ports:
+            - 8080:80
+
+    db:
+        image: mariadb
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        volumes:
+            - db-data:/var/lib/mysql
+        ports:
+            - 3366:3306
+
+volumes:
+    db-data: {}
