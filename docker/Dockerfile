@@ -18,6 +18,9 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
+		autoconf \
+		g++ \
+		make \
 	;
 
 ARG APCU_VERSION=5.1.17

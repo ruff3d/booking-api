@@ -25,10 +25,12 @@ class RoomAvailabilityValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         /* @var $constraint RoomAvailability */
-
-        if ($this->bookingService->findByInterval($value->getBookedFrom(), $value->getBookedTo())->count() > 0) {
+        $bookedFrom = $value->getBookedFrom();
+        $bookedTo = $value->getBookedTo();
+        if (count($this->bookingService->findByInterval($bookedFrom, $bookedTo)) > 0) {
             $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ value }}', $value)
+                ->setParameter('{{ from }}', $bookedFrom->format('Y-m-d h:m'))
+                ->setParameter('{{ to }}', $bookedTo->format('Y-m-d h:m'))
                 ->addViolation();
         }
     }

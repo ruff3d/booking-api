@@ -10,8 +10,9 @@ services:
         depends_on:
             - db
         volumes:
-            - ./:/srv:rw
-            - ./docker/php/php.ini-dev/:/usr/local/etc/php/conf.d/api-platform.ini
+            - ./:/srv:rw,delegated
+            - ./docker/php/php.ini-dev/:/usr/local/etc/php/conf.d/api.ini:ro,cached
+            - cache-data:/srv/var/cache:delegated
         env_file:
             - .env
         environment:
@@ -20,7 +21,7 @@ services:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-            - PHP_IDE_CONFIG=BookingApp
+            - PHP_IDE_CONFIG=serverName=BookingApp
 
     api:
         build:
@@ -31,7 +32,7 @@ services:
         depends_on:
             - php
         volumes:
-            - ./public:/srv/public:ro
+            - ./public:/srv/public:ro,cached
         ports:
             - 8080:80
 
@@ -49,3 +50,4 @@ services:
 
 volumes:
     db-data: {}
+    cache-data: {}

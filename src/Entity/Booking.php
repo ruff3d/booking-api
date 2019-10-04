@@ -20,8 +20,8 @@ class Booking
     private $id;
 
     /**
-     * @Assert\NotBlank
-     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $firstName;
 
@@ -32,14 +32,14 @@ class Booking
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $company;
 
     /**
      * @Assert\NotBlank
      * @Assert\DateTime
-     * @Assert\LessThan(propertyPath="endDate", message="Start date is after End date")
+     * @Assert\LessThan(propertyPath="bookedTo", message="Start date is after End date")
      * @ORM\Column(type="datetime")
      */
     private $bookedFrom;
@@ -56,7 +56,7 @@ class Booking
         return $this->id;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -68,7 +68,7 @@ class Booking
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -85,7 +85,7 @@ class Booking
         return $this->company;
     }
 
-    public function setCompany(string $company): self
+    public function setCompany(?string $company): self
     {
         $this->company = $company;
 

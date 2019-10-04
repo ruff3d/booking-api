@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Repository\BookingRepository;
 use DateTimeInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 class BookingService
 {
@@ -24,6 +26,17 @@ class BookingService
 
     public function findByInterval(DateTimeInterface $from, DateTimeInterface $to): array
     {
-        $this->bookingRepository->findByInterval($from, $to);
+        return $this->bookingRepository->findByInterval($from, $to);
+    }
+
+    /**
+     * @param array $bookings
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function saveMany(array $bookings): void
+    {
+        $this->bookingRepository->saveMany($bookings);
     }
 }

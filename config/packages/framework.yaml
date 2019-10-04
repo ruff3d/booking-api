@@ -1,6 +1,9 @@
 framework:
     secret: '%env(APP_SECRET)%'
     templating: { engines: ['twig'] }
+    validation:
+        enabled: true
+        enable_annotations: true
     serializer:
         name_converter: 'serializer.name_converter.camel_case_to_snake_case'
     #csrf_protection: true

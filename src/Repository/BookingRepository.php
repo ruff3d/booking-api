@@ -6,6 +6,8 @@ use App\Entity\Booking;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 /**
  * @method Booking|null find($id, $lockMode = null, $lockVersion = null)
@@ -30,11 +32,27 @@ class BookingRepository extends ServiceEntityRepository
     public function findByInterval(DateTimeInterface $from, DateTimeInterface $to, int $limit = 10): array
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.booked_from >= :from AND b.booked_to <= :to')
+            ->andWhere('b.bookedFrom >= :from AND b.bookedTo <= :to')
             ->setParameters(['from' => $from, 'to' => $to])
             ->orderBy('b.id', 'ASC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param Booking[] $bookings
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function saveMany(array $bookings): void
+    {
+        foreach ($bookings as $booking) {
+            $this->_em->persist($booking);
+        }
+
+        $this->_em->flush();
+        $this->_em->clear();
     }
 }
