@@ -6,8 +6,8 @@ use App\Entity\Booking;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
+use Doctrine\Common\Persistence\Mapping\MappingException;
+use Doctrine\ORM\{NonUniqueResultException, OptimisticLockException, ORMException};
 
 /**
  * @method Booking|null find($id, $lockMode = null, $lockVersion = null)
@@ -36,8 +36,30 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameters(['from' => $from, 'to' => $to])
             ->orderBy('b.id', 'ASC')
             ->setMaxResults($limit)
+            ->setCacheable(true)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param DateTimeInterface $from
+     * @param DateTimeInterface $to
+     *
+     * @return bool
+     * @throws NonUniqueResultException
+     */
+    public function checkAvailability(DateTimeInterface $from, DateTimeInterface $to): bool
+    {
+        $count = $this->createQueryBuilder('b')
+            ->select('count(b.id)')
+            ->orWhere(':from < b.bookedTo')
+            ->orWhere(':to < b.bookedFrom')
+            ->setParameters(['from' => $from, 'to' => $to])
+            ->setCacheable(true)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (int)$count === 0;
     }
 
     /**
@@ -45,6 +67,7 @@ class BookingRepository extends ServiceEntityRepository
      *
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws MappingException
      */
     public function saveMany(array $bookings): void
     {

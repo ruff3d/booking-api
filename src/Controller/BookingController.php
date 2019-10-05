@@ -5,19 +5,12 @@ namespace App\Controller;
 use App\Entity\Booking;
 use App\Service\BookingService;
 use DateTime;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use FOS\RestBundle\Controller\Annotations\QueryParam;
-use FOS\RestBundle\Controller\Annotations\Route;
+use FOS\RestBundle\Controller\Annotations\{QueryParam, Route};
 use FOS\RestBundle\Request\ParamFetcher;
-use http\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use FOS\RestBundle\View\View;
-//use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -39,22 +32,22 @@ class BookingController extends AbstractFOSRestController
 
     /**
      * @Route("/booking", methods={"GET"})
-     * @QueryParam(name="booked_from", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d+"),
+     * @QueryParam(name="booked_from", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d"),
      *     description="Time from.")
-     * @QueryParam(name="booked_to", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d+"),
+     * @QueryParam(name="booked_to", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d"),
      *     description="Time to.")
      * @param ParamFetcher $paramFetcher
      *
-     * @return Booking[]|View
+     * @return Booking[]
      * @throws \Exception
      */
-    public function bookingList(ParamFetcher $paramFetcher)
+    public function bookingList(ParamFetcher $paramFetcher): array
     {
         $from = new DateTime($paramFetcher->get('booked_from'));
         $to = new DateTime($paramFetcher->get('booked_to'));
         $bookings = $this->bookingService->findByInterval($from, $to);
         if (!$bookings) {
-            return new View('There are no bookings for this interval', Response::HTTP_NOT_FOUND);
+            throw new HttpException(Response::HTTP_NOT_FOUND, 'There are no bookings for this interval');
         }
 
         return $bookings;
@@ -73,7 +66,7 @@ class BookingController extends AbstractFOSRestController
         if ($validationErrors->count() !== 0) {
             $messages = '';
             foreach ($validationErrors as $violation) {
-                $messages .= $violation->getMessage() . PHP_EOL;
+                $messages .= $violation->getMessage();
             }
 
             throw new HttpException(Response::HTTP_METHOD_NOT_ALLOWED, $messages);
@@ -81,7 +74,7 @@ class BookingController extends AbstractFOSRestController
         try {
             $this->bookingService->saveMany($bookings);
         } catch (\Exception $exception) {
-            throw new HttpException(500,'There is DB issue');
+            throw new HttpException(500,'Something happened');
         }
         return $bookings;
     }

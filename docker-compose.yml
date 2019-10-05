@@ -10,9 +10,8 @@ services:
         depends_on:
             - db
         volumes:
-            - ./:/srv:rw,delegated
+            - ./:/srv:rw,cached
             - ./docker/php/php.ini-dev/:/usr/local/etc/php/conf.d/api.ini:ro,cached
-            - cache-data:/srv/var/cache:delegated
         env_file:
             - .env
         environment:
@@ -48,6 +47,13 @@ services:
         ports:
             - 3366:3306
 
+    varnish:
+        image: varnish
+        depends_on:
+            - api
+        volumes:
+          - ./docker/varnish/conf/default.vcl:/usr/local/etc/varnish/default.vcl:ro,cached
+
+
 volumes:
     db-data: {}
-    cache-data: {}

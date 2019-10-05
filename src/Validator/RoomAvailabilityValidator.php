@@ -5,6 +5,7 @@ namespace App\Validator;
 use App\Entity\Booking;
 use App\Service\BookingService;
 use Symfony\Component\Validator\{Constraint, ConstraintValidator};
+use Doctrine\ORM\{NonUniqueResultException, NoResultException};
 
 class RoomAvailabilityValidator extends ConstraintValidator
 {
@@ -21,16 +22,19 @@ class RoomAvailabilityValidator extends ConstraintValidator
     /**
      * @param Booking $value
      * @param Constraint $constraint
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function validate($value, Constraint $constraint)
     {
         /* @var $constraint RoomAvailability */
         $bookedFrom = $value->getBookedFrom();
         $bookedTo = $value->getBookedTo();
-        if (count($this->bookingService->findByInterval($bookedFrom, $bookedTo)) > 0) {
+        if (!$this->bookingService->isAvailable($bookedFrom, $bookedTo)) {
             $this->context->buildViolation($constraint->message)
-                ->setParameter('{{ from }}', $bookedFrom->format('Y-m-d h:m'))
-                ->setParameter('{{ to }}', $bookedTo->format('Y-m-d h:m'))
+                ->setParameter('{{ from }}', $bookedFrom->format('Y-m-d h:m:s'))
+                ->setParameter('{{ to }}', $bookedTo->format('Y-m-d h:m:s'))
                 ->addViolation();
         }
     }
