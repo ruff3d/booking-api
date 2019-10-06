@@ -10,7 +10,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use FOS\RestBundle\Controller\Annotations\{QueryParam, Route};
 use FOS\RestBundle\Request\ParamFetcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,17 +37,18 @@ class BookingController extends AbstractFOSRestController
      *     produces={"application/json"},
      *     @SWG\Response(
      *         response=200,
-     *         description="Success",
+     *         description="Successful operation",
      *         @SWG\Schema(
      *             type="array",
      *             @Model(type=App\Entity\Booking::class)
      *         ),
      *     ),
      *     @SWG\Response(
-     *         response=400,
-     *         description="Bad query"
+     *         response=405,
+     *         description="Invalid input"
      *     )
      * )
+     * @Cache(maxage="10")
      * @Route("/booking", methods={"GET"})
      * @QueryParam(name="booked_from", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d"),
      *     description="Time from.")
@@ -64,7 +65,7 @@ class BookingController extends AbstractFOSRestController
         $to = new DateTime($paramFetcher->get('booked_to'));
         $bookings = $this->bookingService->findByInterval($from, $to);
         if (!$bookings) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, 'There are no bookings for this interval');
+            throw new HttpException(405, 'There are no bookings for this interval');
         }
 
         return $bookings;
@@ -84,15 +85,15 @@ class BookingController extends AbstractFOSRestController
      *     ),
      *     @SWG\Response(
      *         response=200,
-     *         description="Success",
+     *         description="Successful operation",
      *         @SWG\Schema(
      *             type="array",
      *             @Model(type=App\Entity\Booking::class)
      *         ),
      *     ),
      *     @SWG\Response(
-     *         response=400,
-     *         description="Bad query"
+     *         response=405,
+     *         description="Invalid input"
      *     )
      * )
      *
@@ -108,10 +109,13 @@ class BookingController extends AbstractFOSRestController
         if ($validationErrors->count() !== 0) {
             $messages = '';
             foreach ($validationErrors as $violation) {
-                $messages .= $violation->getMessage();
+                if ($violation->getCode() === 202) {
+                    throw new HttpException( 202, $violation->getMessage());
+                }
+                $messages .= $violation->getPropertyPath() .': '. $violation->getMessage() . ' ';
             }
 
-            throw new HttpException(Response::HTTP_METHOD_NOT_ALLOWED, $messages);
+            throw new HttpException(405, $messages);
         }
         try {
             $this->bookingService->saveMany($bookings);

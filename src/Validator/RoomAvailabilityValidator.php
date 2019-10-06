@@ -37,11 +37,13 @@ class RoomAvailabilityValidator extends ConstraintValidator
         }
 
         if (!$this->bookingService->isAvailable($bookedFrom, $bookedTo)) {
-            $this->context->addViolation($constraint->message,
+            $this->context->buildViolation($constraint->message,
                 [
                     '{{ from }}' => $bookedFrom->format('Y-m-d h:m:s'),
                     '{{ to }}'   => $bookedTo->format('Y-m-d h:m:s')
-                ]);
+                ])
+                ->setCode(202)
+                ->addViolation();
         }
     }
 }

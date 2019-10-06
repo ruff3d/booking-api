@@ -12,7 +12,7 @@ opcache.validate_timestamps = 0
 realpath_cache_size = 4096K
 realpath_cache_ttl = 600
 
-#zend_extension=xdebug
+zend_extension=xdebug
 # debug settings
 xdebug.remote_enable=1
 xdebug.remote_autostart=1

@@ -51,8 +51,12 @@ services:
         image: varnish
         depends_on:
             - api
+        ports:
+            - 8181:80
+        tmpfs:
+            - /var/lib/varnish:exec
         volumes:
-          - ./docker/varnish/conf/default.vcl:/usr/local/etc/varnish/default.vcl:ro,cached
+            - ./docker/varnish/default.vcl:/etc/varnish/default.vcl:ro,cached
 
 
 volumes:
