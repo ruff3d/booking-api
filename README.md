@@ -14,3 +14,6 @@ App for booking a meeting room
 		sh          - Log in to php cntainer
 		restart     - Restart all containers
 		test        - Run tests
+		
+# ApiDoc
+served on http://localhost:8080/v2/doc
