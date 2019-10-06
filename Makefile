@@ -28,4 +28,4 @@ migration:
 init: start migration
 
 test:
-		docker-compose exec php ./bin/console doctrine:migrations:migrate -n -e test && ./bin/phpunit
+		docker-compose exec php ./bin/phpunit
