@@ -30,6 +30,7 @@ services:
         image: nginx:bookig
         depends_on:
             - php
+            - db
         volumes:
             - ./public:/srv/public:ro,cached
         ports:
@@ -57,7 +58,6 @@ services:
             - /var/lib/varnish:exec
         volumes:
             - ./docker/varnish/default.vcl:/etc/varnish/default.vcl:ro,cached
-
 
 volumes:
     db-data: {}
