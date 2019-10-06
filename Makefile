@@ -3,9 +3,7 @@ default: help
 
 help:
 		@echo "The list of supported commands:"
-		@echo "init        - Init command for freash setup"
-		@echo "migration   - Perform the migrations"
-		@echo "start       - Build Images, run container"
+		@echo "start       - Build Images, run container, perform existent migrations"
 		@echo "stop        - Stop and remove running containers"
 		@echo "sh          - Log in to php cntainer"
 		@echo "restart     - Restart all containers"
