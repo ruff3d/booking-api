@@ -92,9 +92,13 @@ class BookingController extends AbstractFOSRestController
      *         ),
      *     ),
      *     @SWG\Response(
+     *         response=202,
+     *         description="Booking not possible, room is not available"
+     *     ),
+     *     @SWG\Response(
      *         response=405,
      *         description="Invalid input"
-     *     )
+     *    )
      * )
      *
      * @Route("/booking", methods={"POST"})
