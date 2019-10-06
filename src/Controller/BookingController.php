@@ -110,7 +110,7 @@ class BookingController extends AbstractFOSRestController
             $messages = '';
             foreach ($validationErrors as $violation) {
                 if ($violation->getCode() === 202) {
-                    throw new HttpException( $violation->getCode() , $violation->getMessage());
+                    throw new HttpException($violation->getCode() , $violation->getMessage());
                 }
                 $messages .= $violation->getPropertyPath() .': '. $violation->getMessage() . ' ';
             }
