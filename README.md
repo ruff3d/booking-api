@@ -20,4 +20,5 @@ served on http://localhost:8080/v2/doc
 
 # Types of resouces
 http://localhost:8080 - NGINX - host resource without cache
+
 http://localhost:8181 - Varnish - Reverse cache proxy 
