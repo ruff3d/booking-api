@@ -7,4 +7,5 @@ nelmio_api_doc:
     areas: # to filter documented areas
         path_patterns:
             - ^/v2(?!/doc$) # Accepts routes under /v2 except /api/doc
-    models: { use_jms: false }
+    models:
+        names: [ { alias: Booking, type: App\Entity\Booking } ]

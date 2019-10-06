@@ -31,6 +31,11 @@ class RoomAvailabilityValidator extends ConstraintValidator
         /* @var $constraint RoomAvailability */
         $bookedFrom = $value->getBookedFrom();
         $bookedTo = $value->getBookedTo();
+
+        if (!($bookedFrom && $bookedTo)) {
+            return;
+        }
+
         if (!$this->bookingService->isAvailable($bookedFrom, $bookedTo)) {
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ from }}', $bookedFrom->format('Y-m-d h:m:s'))

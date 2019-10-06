@@ -1,17 +1,24 @@
 # Read the documentation: https://symfony.com/doc/master/bundles/FOSRestBundle/index.html
 fos_rest:
-    param_fetcher_listener:  true
+    param_fetcher_listener:
+        force: true
+        enabled: true
     allowed_methods_listener:  true
     routing_loader:
         default_format: json
         include_format: true
     body_listener:
         array_normalizer: fos_rest.normalizer.camel_keys
+        default_format: json
+        decoders:
+            json: fos_rest.decoder.json
+        throw_exception_on_unsupported_content_type:  true
     body_converter:
         enabled: true
         validate: true
         validation_errors_argument: validationErrors
-
+    serializer:
+        serialize_null: true
     view:
         jsonp_handler: ~
         view_response_listener:  'force'
@@ -21,18 +28,13 @@ fos_rest:
         default_engine: none
         mime_types:
                 json: ['application/json', 'application/json;version=1.0', 'application/json;version=1.1']
-#    exception:
-#        codes:
-#            App\Exception\MyException: 403
-#        messages:
-#            App\Exception\MyException: Forbidden area.
     format_listener:
         enabled: true
         rules:
-            - { path: ^/v2, prefer_extension: false, fallback_format: json, priorities: [ json ] }
+            - { path: ^/v2, fallback_format: json}
     access_denied_listener:
         json: true
     exception:
         codes:
-            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
-            'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+            Symfony\Component\Routing\Exception\ResourceNotFoundException: 404
+            Doctrine\ORM\OptimisticLockException: HTTP_CONFLICT

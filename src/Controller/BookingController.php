@@ -6,10 +6,12 @@ use App\Entity\Booking;
 use App\Service\BookingService;
 use DateTime;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use FOS\RestBundle\Controller\Annotations\{QueryParam, Route};
 use FOS\RestBundle\Request\ParamFetcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
+use Swagger\Annotations as SWG;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -31,6 +33,21 @@ class BookingController extends AbstractFOSRestController
     }
 
     /**
+     *  @SWG\Get(
+     *     produces={"application/json"},
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *             type="array",
+     *             @Model(type=App\Entity\Booking::class)
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="Bad query"
+     *     )
+     * )
      * @Route("/booking", methods={"GET"})
      * @QueryParam(name="booked_from", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d"),
      *     description="Time from.")
@@ -54,6 +71,31 @@ class BookingController extends AbstractFOSRestController
     }
 
     /**
+     *  @SWG\Post(
+     *     produces={"application/json"},
+     *     @SWG\Parameter(
+     *         name="data",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(
+     *             type="array",
+     *             @Model(type=App\Entity\Booking::class)
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="Success",
+     *         @SWG\Schema(
+     *             type="array",
+     *             @Model(type=App\Entity\Booking::class)
+     *         ),
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="Bad query"
+     *     )
+     * )
+     *
      * @Route("/booking", methods={"POST"})
      * @ParamConverter("bookings", class="App\Entity\Booking[]", converter="fos_rest.request_body")
      * @param Booking[] $bookings
