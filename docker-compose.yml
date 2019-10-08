@@ -49,15 +49,17 @@ services:
             - 3366:3306
 
     varnish:
-        image: varnish
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+            target: api_cache
+        image: varnish:bookig
         depends_on:
             - api
         ports:
             - 8181:80
         tmpfs:
             - /var/lib/varnish:exec
-        volumes:
-            - ./docker/varnish/default.vcl:/etc/varnish/default.vcl:ro,cached
 
 volumes:
     db-data: {}

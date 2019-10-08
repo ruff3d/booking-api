@@ -120,7 +120,6 @@ COPY --from=api_php /srv/public ./
 
 
 # "varnish" stage
-# does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
-#FROM cooptilleuls/varnish:${VARNISH_VERSION}-alpine AS api_platform_varnish
-#
-#COPY docker/varnish/conf/default.vcl /usr/local/etc/varnish/default.vcl
+FROM varnish AS api_cache
+
+COPY docker/varnish/default.vcl /etc/varnish/default.vcl
