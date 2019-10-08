@@ -50,9 +50,9 @@ class BookingController extends AbstractFOSRestController
      * )
      * @Cache(maxage="10")
      * @Route("/booking", methods={"GET"})
-     * @QueryParam(name="booked_from", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d"),
+     * @QueryParam(name="booked_from", allowBlank=false, strict=true, requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
      *     description="Time from.")
-     * @QueryParam(name="booked_to", allowBlank=false, strict=true, requirements=@Assert\DateTime(format="Y-m-d"),
+     * @QueryParam(name="booked_to", allowBlank=false, strict=true, requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
      *     description="Time to.")
      * @param ParamFetcher $paramFetcher
      *
