@@ -5,16 +5,16 @@ namespace App\Controller;
 use App\Entity\Booking;
 use App\Service\BookingService;
 use DateTime;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\{
+    Controller\AbstractFOSRestController,
+    Controller\Annotations\QueryParam,
+    Controller\Annotations\Route
+};
 use Nelmio\ApiDocBundle\Annotation\Model;
-use FOS\RestBundle\Controller\Annotations\{QueryParam, Route};
-use FOS\RestBundle\Request\ParamFetcher;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\{ParamConverter, Cache};
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\{Constraints as Assert, ConstraintViolationListInterface};
 
 /**
  * @Route("/v2")
