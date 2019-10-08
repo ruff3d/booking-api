@@ -33,7 +33,7 @@ class BookingController extends AbstractFOSRestController
     }
 
     /**
-     *  @SWG\Get(
+     * @SWG\Get(
      *     produces={"application/json"},
      *     @SWG\Response(
      *         response=200,
@@ -50,10 +50,20 @@ class BookingController extends AbstractFOSRestController
      * )
      * @Cache(maxage="10")
      * @Route("/booking", methods={"GET"})
-     * @QueryParam(name="booked_from", allowBlank=false, strict=true, requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
-     *     description="Time from.")
-     * @QueryParam(name="booked_to", allowBlank=false, strict=true, requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
-     *     description="Time to.")
+     * @QueryParam(
+     *     name="booked_from",
+     *     allowBlank=false,
+     *     strict=true,
+     *     requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
+     *     description="Time from."
+     * )
+     * @QueryParam(
+     *     name="booked_to",
+     *     allowBlank=false,
+     *     strict=true,
+     *     requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
+     *     description="Time to."
+     * )
      * @param ParamFetcher $paramFetcher
      *
      * @return Booking[]
@@ -72,7 +82,7 @@ class BookingController extends AbstractFOSRestController
     }
 
     /**
-     *  @SWG\Post(
+     * @SWG\Post(
      *     produces={"application/json"},
      *     @SWG\Parameter(
      *         name="data",
@@ -114,9 +124,9 @@ class BookingController extends AbstractFOSRestController
             $messages = '';
             foreach ($validationErrors as $violation) {
                 if ($violation->getCode() === 202) {
-                    throw new HttpException($violation->getCode() , $violation->getMessage());
+                    throw new HttpException($violation->getCode(), $violation->getMessage());
                 }
-                $messages .= $violation->getPropertyPath() .': '. $violation->getMessage() . ' ';
+                $messages .= $violation->getPropertyPath() . ': ' . $violation->getMessage() . ' ';
             }
 
             throw new HttpException(405, $messages);
@@ -124,8 +134,9 @@ class BookingController extends AbstractFOSRestController
         try {
             $this->bookingService->saveMany($bookings);
         } catch (\Exception $exception) {
-            throw new HttpException(500,'Something happened');
+            throw new HttpException(500, 'Something happened');
         }
+
         return $bookings;
     }
 
