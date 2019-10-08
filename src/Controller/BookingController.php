@@ -51,29 +51,30 @@ class BookingController extends AbstractFOSRestController
      * @Cache(maxage="10")
      * @Route("/booking", methods={"GET"})
      * @QueryParam(
-     *     name="booked_from",
+     *     key="booked_from",
+     *     name="bookedFrom",
      *     allowBlank=false,
      *     strict=true,
      *     requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
      *     description="Time from."
      * )
      * @QueryParam(
-     *     name="booked_to",
+     *     key="booked_to",
+     *     name="bookedTo",
      *     allowBlank=false,
      *     strict=true,
      *     requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
      *     description="Time to."
      * )
-     * @param ParamFetcher $paramFetcher
+     * @param DateTime $bookedFrom
+     * @param DateTime $bookedTo
      *
      * @return Booking[]
      * @throws \Exception
      */
-    public function bookingList(ParamFetcher $paramFetcher): array
+    public function bookingList(DateTime $bookedFrom, DateTime $bookedTo): array
     {
-        $from = new DateTime($paramFetcher->get('booked_from'));
-        $to = new DateTime($paramFetcher->get('booked_to'));
-        $bookings = $this->bookingService->findByInterval($from, $to);
+        $bookings = $this->bookingService->findByInterval($bookedFrom, $bookedTo);
         if (!$bookings) {
             throw new HttpException(405, 'There are no bookings for this interval');
         }
