@@ -53,7 +53,7 @@ class BookingRepository extends ServiceEntityRepository
         $count = $this->createQueryBuilder('b')
             ->select('count(b.id)')
             ->orWhere(':from < b.bookedTo')
-            ->orWhere(':to < b.bookedFrom')
+            ->orWhere(':to > b.bookedFrom')
             ->setParameters(['from' => $from, 'to' => $to])
             ->setCacheable(true)
             ->getQuery()

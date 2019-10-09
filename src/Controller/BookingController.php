@@ -21,7 +21,6 @@ use Symfony\Component\Validator\{Constraints as Assert, ConstraintViolationListI
  */
 class BookingController extends AbstractFOSRestController
 {
-
     /**
      * @var BookingService
      */
