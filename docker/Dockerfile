@@ -58,8 +58,8 @@ RUN set -eux; \
 	apk del .build-deps
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN ln -s $PHP_INI_DIR/php.ini-prod $PHP_INI_DIR/php.ini
-COPY docker/php/php.ini-prod $PHP_INI_DIR/conf.d/api-php.ini
+RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+COPY docker/php/prod.ini $PHP_INI_DIR/conf.d/php-api.ini
 
 # Workaround to allow using PHPUnit 8 with Symfony 4.3
 ENV SYMFONY_PHPUNIT_VERSION=8.3
