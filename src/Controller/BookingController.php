@@ -47,7 +47,7 @@ class BookingController extends AbstractFOSRestController
      *         description="Invalid input"
      *     )
      * )
-     * @Cache(maxage="10")
+     * @Cache(maxage="15")
      * @Route("/booking", methods={"GET"})
      * @QueryParam(
      *     key="booked_from",
