@@ -38,6 +38,8 @@ class BookingRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->setCacheable(true)
             ->getQuery()
+            ->useQueryCache(true)
+            ->useResultCache(true)
             ->getResult();
     }
 
@@ -52,11 +54,13 @@ class BookingRepository extends ServiceEntityRepository
     {
         $count = $this->createQueryBuilder('b')
             ->select('count(b.id)')
-            ->orWhere(':from < b.bookedTo')
-            ->orWhere(':to > b.bookedFrom')
+            ->andWhere(':from < b.bookedTo')
+            ->andWhere(':to > b.bookedFrom')
             ->setParameters(['from' => $from, 'to' => $to])
             ->setCacheable(true)
             ->getQuery()
+            ->useQueryCache(true)
+            ->useResultCache(true)
             ->getSingleScalarResult();
 
         return (int)$count === 0;
