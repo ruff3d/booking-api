@@ -54,7 +54,7 @@ class BookingController extends AbstractFOSRestController
      *     name="bookedFrom",
      *     allowBlank=false,
      *     strict=true,
-     *     requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
+     *     requirements=@Assert\Regex("/^\d{4}-\d{1,2}-\d{1,2}.*?/"),
      *     description="Time from."
      * )
      * @QueryParam(
@@ -62,7 +62,7 @@ class BookingController extends AbstractFOSRestController
      *     name="bookedTo",
      *     allowBlank=false,
      *     strict=true,
-     *     requirements=@Assert\Regex("/(\d{4}-\d{1,2}-\d{1,2})T?(\d{1,2}:\d{1,2}:\d{1,2})?(?:\.\d+)?Z?/"),
+     *     requirements=@Assert\Regex("/^\d{4}-\d{1,2}-\d{1,2}.*?/"),
      *     description="Time to."
      * )
      * @param DateTime $bookedFrom
